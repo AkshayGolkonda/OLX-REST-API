@@ -1,0 +1,107 @@
+package com.olx.controller;
+
+import java.time.LocalDate;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.olx.dto.Advertise;
+import com.olx.service.AdvertiseService;
+
+import io.swagger.annotations.ApiOperation;
+
+@RestController
+@RequestMapping("/olx-adv")
+@CrossOrigin(origins="*")
+public class AdvertiseController {
+	
+	@Autowired
+	AdvertiseService advertiseService;
+	
+	 // 8
+    @PostMapping(value = "/advertise", consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    @ApiOperation(value = "Reads specific stock", notes = "This REST API returns list the stock of given id")
+
+    public Advertise postAdvertise(Advertise adv) {
+	return advertiseService.postAdvertise(adv);
+    }
+	
+    //9
+    @PutMapping(value = "/advertise/{id}", consumes = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE }, produces = { MediaType.APPLICATION_JSON_VALUE,
+    		    MediaType.APPLICATION_XML_VALUE })
+    @ApiOperation(value = "Reads specific stock", notes = "This REST API returns list the stock of given id")
+    public Advertise updateAdvertise(Advertise adv) {
+    	return advertiseService.updateAdvertise(adv);
+    }
+    
+    // 10 Reads all advertisements posted by logged in user
+    @GetMapping(value = "/user/advertise", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    @ApiOperation(value = "Reads specific stock", notes = "This REST API returns list the stock of given id")
+    public List<Advertise> getAllAdvByUser() {
+	return null;
+    }
+    
+ // 11 Reads specific advertisement posed by logged in user
+    @GetMapping(value = "/user/advertise/{id}", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    @ApiOperation(value = "Reads specific stock", notes = "This REST API returns list the stock of given id")
+    public List<Advertise> getAdvByUser(@PathVariable("id") String uname) {
+	return null;
+    }
+    
+    
+ // 12 Deletes specific advertisement posted by logged in user
+
+    @DeleteMapping(value = "/user/advertise/{id}")
+    @ApiOperation(value = "Reads specific stock", notes = "This REST API returns list the stock of given id")
+    public boolean deleteAdvByUserId() {
+    	return false;
+    }
+    
+ 
+    // 13	
+    @GetMapping(value="/search/filtercriteria", produces=MediaType.APPLICATION_JSON_VALUE)
+    public List<Advertise> searchAdvertisesByFilterCriteria(@RequestParam(name="searchText", required = false)String searchText,
+    @RequestParam(name = "category", required = false, defaultValue = "0")int categoryId, 
+    @RequestParam(name="postedBy", required=false)String postedBy,
+    @RequestParam(name="dateCondition", required=false)String dateCondition,
+    @RequestParam(name="onDate", required=false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate onDate,
+    @RequestParam(name="fromDate", required=false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
+    @RequestParam(name="toDate", required=false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate,
+    @RequestParam(name="sortedBy", required=false)String sortedBy, @RequestParam(name = "startIndex", defaultValue="0")int startIndex, @RequestParam(name="records", defaultValue = "10")int records
+    ) {
+    List<Advertise> advertises = advertiseService.searchAdvertisesByFilterCriteria(searchText, categoryId, postedBy, dateCondition,
+    onDate, fromDate, toDate, sortedBy, startIndex, records);
+    return advertises;
+    }
+    
+ // 14 Matches advertisements using the provided
+    // 'searchText' within all fields of an advertise.
+    @GetMapping(value = "/search", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    @ApiOperation(value = "Reads specific stock", notes = "This REST API returns list the stock of given id")
+    public Advertise SearchAdvByText(@RequestParam("searchText") String searchText) {
+	return advertiseService.SearchAdvByText(searchText);
+    }
+    
+    
+ // 15 Return advertise details
+
+    @GetMapping(value = "/{id}", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
+    @ApiOperation(value = "Reads specific stock", notes = "This REST API returns list the stock of given id")
+
+    public Advertise returnAdv(int id) {
+	 return advertiseService.returnAdv(id);
+    }
+    
+	
+}
