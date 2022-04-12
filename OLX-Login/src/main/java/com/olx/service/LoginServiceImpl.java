@@ -1,10 +1,6 @@
 package com.olx.service;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,19 +51,11 @@ public class LoginServiceImpl implements LoginService {
 	
 	
 	private UserEntity convertDTOIntoEntity(User user) {
-		TypeMap<User, UserEntity> tMap = modelMapper.typeMap(User.class, UserEntity.class);
-		/*
-		 * tMap.addMappings(mapper->{ mapper.map(); });
-		 */
 		UserEntity userEntity=modelMapper.map(user,UserEntity.class);
 		return userEntity;
 	}
 	
 	private User convertEntityIntoDTO(UserEntity userEntity) {
-		TypeMap<UserEntity, User> tMap=modelMapper.typeMap(UserEntity.class, User.class);
-		/*
-		 * tMap.addMappings(mapper->{ mapper.map(); });
-		 */
 		User user=modelMapper.map(userEntity, User.class);
 		return user;
 	}
