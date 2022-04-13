@@ -8,12 +8,10 @@ import javax.persistence.EntityManager;
 import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Order;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeMap;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -63,7 +61,7 @@ public class AdvertiseServiceImpl implements AdvertiseService {
 	}
 
 	@Override
-	public List<Advertise> searchAdvertisesByFilterCriteria(String searchText, int categoryId, String postedBy,
+	public List<Advertise> searchAdvertisesByFilterCriteria(String searchText, String category, String postedBy,
 			String dateCondition, LocalDate onDate, LocalDate fromDate, LocalDate toDate, String sortedBy,
 			int startIndex, int records) {
 		List<AdvertiseEntity> entityList=advertiseRepo.findAll();
@@ -74,28 +72,29 @@ public class AdvertiseServiceImpl implements AdvertiseService {
 		Predicate predicateTitle=critertiaBuilder.and();
 		Predicate predicateDescription = critertiaBuilder.and();
 		Predicate predicateSearchText= critertiaBuilder.and();
-		Predicate predicateCategoryId=critertiaBuilder.and();
+		Predicate predicateCategoryName=critertiaBuilder.and();
 		Predicate predicatePostedBy = critertiaBuilder.and();
-		Order orderSortedByPrice;
-		Order orderSortedByTitle;
 		Predicate predicateDateCondition=critertiaBuilder.and();
 		Predicate predicateDateConditionEquals = critertiaBuilder.and();
 		Predicate predicateDateConditionGreaterThan = critertiaBuilder.and();
 		Predicate predicateDateConditionLessThan = critertiaBuilder.and();
 		Predicate predicateDateConditionBetween = critertiaBuilder.and();
-		Predicate predicateSortedBy = critertiaBuilder.and();
 		Predicate predicateFinal = critertiaBuilder.and();
-		CriteriaQuery<AdvertiseEntity> querySortedByTitle;
 		
 		if(searchText!=null && !"".equalsIgnoreCase(searchText)) {
 			predicateTitle=critertiaBuilder.like(rootEntity.get("title"),"%"+searchText+"%");
 			predicateDescription=critertiaBuilder.like(rootEntity.get("description"),"%"+searchText+"%");
-			predicateSearchText=critertiaBuilder.and(predicateTitle,predicateDescription);
+			predicateSearchText=critertiaBuilder.or(predicateTitle,predicateDescription);
 		}
 
 		if(postedBy!=null && !"".equalsIgnoreCase(postedBy)) {
 			predicatePostedBy=critertiaBuilder.equal(rootEntity.get("username"),postedBy);
 		}
+		
+		if(category!=null && !"".equalsIgnoreCase(category)) {
+			predicateCategoryName=critertiaBuilder.equal(rootEntity.get("category"), category);
+		}
+		
 		if(dateCondition!=null && dateCondition.contains("equal")) {
 			predicateDateConditionEquals=critertiaBuilder.equal(rootEntity.get("createdDate"),onDate);
 		}
@@ -109,23 +108,18 @@ public class AdvertiseServiceImpl implements AdvertiseService {
 			predicateDateConditionBetween=critertiaBuilder.between(rootEntity.get("createdDate"), fromDate, toDate);
 		}
 		predicateDateCondition=critertiaBuilder.and(predicateDateConditionEquals,predicateDateConditionBetween,predicateDateConditionGreaterThan,predicateDateConditionLessThan);
-		if(categoryId>-1) {
-			predicateCategoryId=critertiaBuilder.equal(rootEntity.get("id"),categoryId);
-		}
+		
+		
+		predicateFinal=critertiaBuilder.and(predicateSearchText,predicatePostedBy,predicateCategoryName,predicateDateCondition);
+		criteriaQuery.where(predicateFinal);
 		if(sortedBy!=null && !"".equalsIgnoreCase(sortedBy)) {
 			if(sortedBy.equalsIgnoreCase("title")) {
-				orderSortedByTitle=critertiaBuilder.asc(rootEntity.get("title"));
-				querySortedByTitle =criteriaQuery.orderBy(orderSortedByTitle);
+				criteriaQuery.orderBy(critertiaBuilder.asc(rootEntity.get("title")));
 			}
 			if(sortedBy.equalsIgnoreCase("price")) {
-				orderSortedByPrice=critertiaBuilder.asc(rootEntity.get("price"));
-				criteriaQuery.orderBy(orderSortedByPrice);
+				criteriaQuery.orderBy(critertiaBuilder.asc(rootEntity.get("price")));
 			}
-			//predicateSortedBy=critertiaBuilder.and();
 		}
-		
-		predicateFinal=critertiaBuilder.and(predicateSearchText,predicatePostedBy,predicateDateCondition);
-		criteriaQuery.where(predicateFinal);
 		TypedQuery<AdvertiseEntity> typedQuery = entityManager.createQuery(criteriaQuery);
 		typedQuery.setFirstResult(startIndex);
 		typedQuery.setMaxResults(records);

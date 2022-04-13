@@ -13,7 +13,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(value=InvalidCredentialsException.class)
 	public ResponseEntity<Object> handleCredentialConflict(RuntimeException exception,WebRequest request){
-		String errorMessage = "{\"error\": \"Invalid Credentials id\"}";
+		String errorMessage = "{\"error\": \"Invalid Credentials \"}";
 		ResponseEntity<Object> response=
 				handleExceptionInternal(exception, errorMessage, new HttpHeaders(), HttpStatus.CONFLICT, request);
 		return response;
@@ -21,7 +21,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	
 	@ExceptionHandler(value=InvalidAuthTokenException.class)
 	public ResponseEntity<Object> handleAuthTokenConflict(RuntimeException exception,WebRequest request){
-		String errorMessage = "{\"error\": \"Invalid Auth Token id\"}";
+		String errorMessage = "{\"error\": \"Invalid Auth Token \"}";
 		ResponseEntity<Object> response=
 				handleExceptionInternal(exception, errorMessage, new HttpHeaders(), HttpStatus.CONFLICT, request);
 		return response;

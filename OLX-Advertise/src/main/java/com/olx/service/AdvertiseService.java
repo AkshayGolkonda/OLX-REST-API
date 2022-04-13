@@ -12,7 +12,7 @@ public interface AdvertiseService {
 	 public List<Advertise> getAdvByUser(String uname);
 	 public boolean deleteAdvByUserId();
 	 public List<Advertise> searchAdvertisesByFilterCriteria(String searchText,
-			    int categoryId,
+			    String category,
 			    String postedBy,
 			    String dateCondition,
 			    LocalDate onDate,

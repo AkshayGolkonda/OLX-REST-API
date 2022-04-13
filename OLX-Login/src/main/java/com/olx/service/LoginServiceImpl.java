@@ -1,11 +1,14 @@
 package com.olx.service;
 
+import java.util.Optional;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.olx.dto.User;
 import com.olx.entity.UserEntity;
+import com.olx.exception.InvalidAuthTokenException;
 import com.olx.repository.UserRepo;
 
 @Service
@@ -38,9 +41,11 @@ public class LoginServiceImpl implements LoginService {
 
 	@Override
 	public User getUser(String authtoken) {
-		// TODO Auto-generated method stub
-		UserEntity userEntity = userRepo.findByFirstName(authtoken); 
-		return convertEntityIntoDTO(userEntity);
+		Optional<UserEntity> userEntity = userRepo.findByFirstName(authtoken); 
+		if(userEntity.isPresent()) {
+			return convertEntityIntoDTO(userEntity.get());
+		}
+		throw new InvalidAuthTokenException();
 	}
 
 	@Override

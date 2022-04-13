@@ -72,7 +72,7 @@ public class AdvertiseController {
     // 13	
     @GetMapping(value="/search/filtercriteria", produces=MediaType.APPLICATION_JSON_VALUE)
     public List<Advertise> searchAdvertisesByFilterCriteria(@RequestParam(name="searchText", required = false)String searchText,
-    @RequestParam(name = "category", required = false, defaultValue = "0")int categoryId, 
+    @RequestParam(name ="category", required = false)String category, 
     @RequestParam(name="postedBy", required=false)String postedBy,
     @RequestParam(name="dateCondition", required=false)String dateCondition,
     @RequestParam(name="onDate", required=false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate onDate,
@@ -80,7 +80,7 @@ public class AdvertiseController {
     @RequestParam(name="toDate", required=false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate,
     @RequestParam(name="sortedBy", required=false)String sortedBy, @RequestParam(name = "startIndex", defaultValue="0")int startIndex, @RequestParam(name="records", defaultValue = "10")int records
     ) {
-    List<Advertise> advertises = advertiseService.searchAdvertisesByFilterCriteria(searchText, categoryId, postedBy, dateCondition,
+    List<Advertise> advertises = advertiseService.searchAdvertisesByFilterCriteria(searchText, category, postedBy, dateCondition,
     onDate, fromDate, toDate, sortedBy, startIndex, records);
     return advertises;
     }
