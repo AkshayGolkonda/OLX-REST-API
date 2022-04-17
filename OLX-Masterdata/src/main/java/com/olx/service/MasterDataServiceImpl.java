@@ -2,6 +2,8 @@ package com.olx.service;
 
 import java.util.ArrayList;	
 import java.util.List;
+import java.util.Optional;
+
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,8 +25,8 @@ public class MasterDataServiceImpl implements MasterDataService{
 	@Autowired
 	StatusRepo statusRepo;
 	
-	//@Autowired
-	ModelMapper modelMapper=new ModelMapper();
+	@Autowired
+	ModelMapper modelMapper;
 
 	@Override
 	public List<Category> getAllCategories() {
@@ -66,6 +68,24 @@ public class MasterDataServiceImpl implements MasterDataService{
 		//TypeMap<StatusEntity, Status> tMap=modelMapper.typeMap(StatusEntity.class, Status.class);
 		Status status=modelMapper.map(statusEntity, Status.class);
 		return status;
+	}
+
+	@Override
+	public String getCategoryById(int id) {
+		Optional<CategoryEntity> categoryEntity=categoryRepo.findById(id);
+		if(categoryEntity.isPresent()) 
+			return convertCategoryEntityIntoCategory(categoryEntity.get()).getCategory();
+		else
+			return null;
+	}
+
+	@Override
+	public String getStatusById(int id) {
+		Optional<StatusEntity> statusEntity=statusRepo.findById(id);
+		if(statusEntity.isPresent())
+			return convertStatusEntityIntoStatus(statusEntity.get()).getStatus();
+		else
+			return null;
 	}
 
 

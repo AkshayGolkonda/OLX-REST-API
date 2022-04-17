@@ -15,6 +15,8 @@ public interface MasterDataService {
 
 	public List<Category> getAllCategories();
 	public List<Status> getAllStatus();
+	public String getCategoryById(int id);
+	public String getStatusById(int id);
 	//public Category postCategory(Category category);
 	//public Status postStatus();
 }

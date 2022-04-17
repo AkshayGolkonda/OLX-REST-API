@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -29,6 +30,16 @@ public class MasterDataController {
 	@GetMapping(value="/advertise/status",produces=MediaType.APPLICATION_JSON_VALUE)
 	public List<Status> getAllStatus(){
 		return masterDataService.getAllStatus();
+	}
+	
+	@GetMapping(value="/advertise/category/{id}",produces=MediaType.APPLICATION_JSON_VALUE)
+	public String getCategoryById(@PathVariable("id")int id){
+		return masterDataService.getCategoryById(id);
+	}
+	
+	@GetMapping(value="/advertise/status/{id}",produces=MediaType.APPLICATION_JSON_VALUE)
+	public String getStatusById(@PathVariable("id")int id){
+		return masterDataService.getStatusById(id);
 	}
 	
 	/*
