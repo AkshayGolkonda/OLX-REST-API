@@ -2,15 +2,17 @@ package com.olx.service;
 
 import java.time.LocalDate;
 import java.util.List;
+
 import com.olx.dto.Advertise;
+import com.olx.entity.AdvertiseEntity;
 
 
 public interface AdvertiseService {
-	public Advertise postAdvertise(Advertise adv);
-	 public Advertise updateAdvertise(Advertise adv);
-	 public List<Advertise> getAllAdvByUser();
-	 public List<Advertise> getAdvByUser(String uname);
-	 public boolean deleteAdvByUserId();
+	public Advertise createNewAdvertise(Advertise adv, String authToken);
+	 public Advertise updateAdvertise(int id, Advertise adv, String authToken);
+	 public List<Advertise> getAllAdvByUser(String authToken);
+	 public Advertise getAdvById(int id, String authToken);
+	 public boolean deleteAdvById(int id, String authToken);
 	 public List<Advertise> searchAdvertisesByFilterCriteria(String searchText,
 			    String category,
 			    String postedBy,
@@ -21,6 +23,6 @@ public interface AdvertiseService {
 			    String sortedBy,
 			    int startIndex,
 			    int records);
-	 public Advertise SearchAdvByText(String searchText);
-	 public Advertise returnAdv(int id);
+	 public List<Advertise> SearchAdvByText(String searchText);
+	 public Advertise returnAdv(int id, String authToken);
 }

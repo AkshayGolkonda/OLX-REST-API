@@ -4,15 +4,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ResponseStatus;
 
 @ResponseStatus(HttpStatus.BAD_REQUEST)
-public class FromDateMissionException extends RuntimeException {
+public class FromDateMissingException extends RuntimeException {
 	
 	private String message;
 
-	public FromDateMissionException(String message) {
+	public FromDateMissingException(String message) {
 		this.message = message;
 	}
 
-	public FromDateMissionException() {
+	public FromDateMissingException() {
 	}
 
 	@Override

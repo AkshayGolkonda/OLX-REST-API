@@ -11,9 +11,9 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
-	@ExceptionHandler(value=FromDateMissionException.class)
+	@ExceptionHandler(value=FromDateMissingException.class)
 	public ResponseEntity<Object> handleFromDateConflict(RuntimeException exception,WebRequest request){
-		String errorMessage = "{\"error\": \"Invalid FromDate \"}";
+		String errorMessage = "{\"error\": \"FromDate Missing\"}";
 		ResponseEntity<Object> response=
 				handleExceptionInternal(exception, errorMessage, new HttpHeaders(), HttpStatus.CONFLICT, request);
 		return response;
@@ -61,7 +61,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	
 	@ExceptionHandler(value=OnDateMissingException.class)
 	public ResponseEntity<Object> handleOnDateConflict(RuntimeException exception,WebRequest request){
-		String errorMessage = "{\"error\": \"Invalid OnDate \"}";
+		String errorMessage = "{\"error\": \"OnDate Missing\"}";
 		ResponseEntity<Object> response=
 				handleExceptionInternal(exception, errorMessage, new HttpHeaders(), HttpStatus.CONFLICT, request);
 		return response;
@@ -69,7 +69,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	
 	@ExceptionHandler(value=ToDateMissingException.class)
 	public ResponseEntity<Object> handleToDateConflict(RuntimeException exception,WebRequest request){
-		String errorMessage = "{\"error\": \"Invalid ToDate \"}";
+		String errorMessage = "{\"error\": \"ToDate Missing \"}";
 		ResponseEntity<Object> response=
 				handleExceptionInternal(exception, errorMessage, new HttpHeaders(), HttpStatus.CONFLICT, request);
 		return response;
@@ -78,6 +78,14 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 	@ExceptionHandler(value=UserNameDoesNotExistException.class)
 	public ResponseEntity<Object> handleUserNameConflict(RuntimeException exception,WebRequest request){
 		String errorMessage = "{\"error\": \"Username Does Not Exist \"}";
+		ResponseEntity<Object> response=
+				handleExceptionInternal(exception, errorMessage, new HttpHeaders(), HttpStatus.CONFLICT, request);
+		return response;
+	}
+	
+	@ExceptionHandler(value=SearchTextMissingException.class)
+	public ResponseEntity<Object> handleSearchTextMissingConflict(RuntimeException exception,WebRequest request){
+		String errorMessage = "{\"error\": \"Search Text Missing \"}";
 		ResponseEntity<Object> response=
 				handleExceptionInternal(exception, errorMessage, new HttpHeaders(), HttpStatus.CONFLICT, request);
 		return response;

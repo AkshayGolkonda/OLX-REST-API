@@ -14,38 +14,35 @@ public class AdvertiseEntity {
 	
 	@Id
 	@GeneratedValue(strategy=GenerationType.SEQUENCE)
-	private long id;
+	private int id;
 	private String title;
 	private String description;
 	private int price;
 	private String category;
-	@Column(name="created_date")
-	private LocalDate createdDate;
-	@Column(name="modified_date")
-	private LocalDate modifiedDate;
 	private String status;
-	@Column(name="username")
 	private String username;
-	public AdvertiseEntity(long id, String title, String description, int price, String category, LocalDate createdDate,
-			LocalDate modifiedDate, String status, String username) {
+	private LocalDate createdDate;
+	private LocalDate modifiedDate;
+	public AdvertiseEntity(int id, String title, String description, int price, String category, String status,
+			String username, LocalDate createdDate, LocalDate modifiedDate) {
 		super();
 		this.id = id;
 		this.title = title;
 		this.description = description;
 		this.price = price;
 		this.category = category;
-		this.createdDate = createdDate;
-		this.modifiedDate = modifiedDate;
 		this.status = status;
 		this.username = username;
+		this.createdDate = createdDate;
+		this.modifiedDate = modifiedDate;
 	}
 	public AdvertiseEntity() {
 		super();
 	}
-	public long getId() {
+	public int getId() {
 		return id;
 	}
-	public void setId(long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public String getTitle() {
@@ -72,18 +69,6 @@ public class AdvertiseEntity {
 	public void setCategory(String category) {
 		this.category = category;
 	}
-	public LocalDate getCreatedDate() {
-		return createdDate;
-	}
-	public void setCreatedDate(LocalDate createdDate) {
-		this.createdDate = createdDate;
-	}
-	public LocalDate getModifiedDate() {
-		return modifiedDate;
-	}
-	public void setModifiedDate(LocalDate modifiedDate) {
-		this.modifiedDate = modifiedDate;
-	}
 	public String getStatus() {
 		return status;
 	}
@@ -96,13 +81,24 @@ public class AdvertiseEntity {
 	public void setUsername(String username) {
 		this.username = username;
 	}
+	public LocalDate getCreatedDate() {
+		return createdDate;
+	}
+	public void setCreatedDate(LocalDate createdDate) {
+		this.createdDate = createdDate;
+	}
+	public LocalDate getModifiedDate() {
+		return modifiedDate;
+	}
+	public void setModifiedDate(LocalDate modifiedDate) {
+		this.modifiedDate = modifiedDate;
+	}
 	@Override
 	public String toString() {
 		return "AdvertiseEntity [id=" + id + ", title=" + title + ", description=" + description + ", price=" + price
-				+ ", category=" + category + ", createdDate=" + createdDate + ", modifiedDate=" + modifiedDate
-				+ ", status=" + status + ", username=" + username + "]";
+				+ ", category=" + category + ", status=" + status + ", username=" + username + ", createdDate="
+				+ createdDate + ", modifiedDate=" + modifiedDate + "]";
 	}
 	
 	
-		
 }
