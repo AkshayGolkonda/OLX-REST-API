@@ -55,6 +55,13 @@ public class User {
 	public void setPhone(long phone) {
 		this.phone = phone;
 	}
+	@Override
+	public String toString() {
+		return "User [firstName=" + firstName + ", lastName=" + lastName + ", userName=" + userName + ", password="
+				+ password + ", email=" + email + ", phone=" + phone + "]";
+	}
+	
+	
 	
 	
 }

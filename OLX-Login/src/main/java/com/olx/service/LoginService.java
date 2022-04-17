@@ -8,6 +8,6 @@ public interface LoginService {
 	public boolean logout(String authToken);
 	public User addUser(User user);
 	public User getUser(String authtoken);
-	public boolean validate(String authToken);
+	public boolean validateJWT(String authToken);
 	
 }

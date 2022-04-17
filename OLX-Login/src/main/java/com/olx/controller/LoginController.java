@@ -1,7 +1,9 @@
 package com.olx.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,32 +26,32 @@ public class LoginController {
 	
 	//1
 	@PostMapping(value="/user/authenticate", consumes=MediaType.APPLICATION_JSON_VALUE)
-	public String authenticate(@RequestBody User user) {
-		return loginService.authenticate(user);
+	public ResponseEntity<String> authenticate(@RequestBody User user) {
+		return new ResponseEntity<String>(loginService.authenticate(user),HttpStatus.OK);
 	}
 	
 	//2
 	@DeleteMapping(value="/user/logout")
-	public boolean logout(@RequestHeader("auth-token") String authToken) {
-		return loginService.logout(authToken);
+	public ResponseEntity<Boolean> logout(@RequestHeader("auth-token") String authToken) {
+		return new ResponseEntity<Boolean>(loginService.logout(authToken),HttpStatus.OK);
 	}
 	
 	//3
 	@PostMapping(value="/user",consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
-	public User addUser(@RequestBody User user) {
-		return loginService.addUser(user);
+	public ResponseEntity<User> addUser(@RequestBody User user) {
+		return new ResponseEntity<User>(loginService.addUser(user),HttpStatus.OK);
 	}
 	
 	//4
 	@GetMapping(value="/user",produces=MediaType.APPLICATION_JSON_VALUE)
-	public User getUser(@RequestHeader("auth-token") String authToken) {
-		return loginService.getUser(authToken);
+	public ResponseEntity<User> getUser(@RequestHeader("auth-token") String authToken) {
+		return new ResponseEntity<User>(loginService.getUser(authToken),HttpStatus.OK);
 	}
 	
 	//5
 	@GetMapping(value="/token/validate",produces=MediaType.APPLICATION_JSON_VALUE)
-	public boolean validate(@RequestHeader("auth-token") String authToken) {
-		return loginService.validate(authToken);
+	public ResponseEntity<Boolean> validateJWT(@RequestHeader("Authorization")String authToken) {
+		return new ResponseEntity<Boolean>(loginService.validateJWT(authToken), HttpStatus.OK);
 	}
 	
 	
