@@ -18,9 +18,16 @@ import org.springframework.stereotype.Service;
 
 import com.olx.dto.Advertise;
 import com.olx.entity.AdvertiseEntity;
+import com.olx.exception.FromDateMissingException;
 import com.olx.exception.InvalidAdvertiseIdException;
 import com.olx.exception.InvalidAuthTokenException;
+import com.olx.exception.InvalidCategoryIdException;
+import com.olx.exception.InvalidPageIdException;
+import com.olx.exception.InvalidStatusIdException;
+import com.olx.exception.OnDateMissingException;
 import com.olx.exception.SearchTextMissingException;
+import com.olx.exception.ToDateMissingException;
+import com.olx.exception.UserNameDoesNotExistException;
 import com.olx.repository.AdvertiseRepo;
 import com.olx.security.JwtUtil;
 
@@ -42,14 +49,18 @@ public class AdvertiseServiceImpl implements AdvertiseService {
 	@Autowired
 	MasterDataServiceDelegate masterDataServiceDelegate;
 	
-	  @Autowired
-	  JwtUtil jwtUtil;
-	 
-	
+	@Autowired
+	JwtUtil jwtUtil;
+
+	//8
 	@Override
 	public Advertise createNewAdvertise(Advertise adv, String authToken) {
 		if(loginServiceDelegate.isTokenValid(authToken)) {
 			AdvertiseEntity advertiseEntity=convertDTOIntoEntity(adv);
+			if(adv.getCategoryId()<1)
+				throw new InvalidCategoryIdException();
+			if(adv.getStatusId()<1)
+				throw new InvalidStatusIdException();
 			advertiseEntity.setCategory(masterDataServiceDelegate.getCategoryValue(adv.getCategoryId()));
 			advertiseEntity.setStatus(masterDataServiceDelegate.getStatusValue(adv.getStatusId()));
 			advertiseEntity.setCreatedDate(LocalDate.now());
@@ -64,7 +75,7 @@ public class AdvertiseServiceImpl implements AdvertiseService {
 		}
 	} 	
 
-
+	//13
 	@Override
 	public List<Advertise> searchAdvertisesByFilterCriteria(String searchText, String category, String postedBy,
 			String dateCondition, LocalDate onDate, LocalDate fromDate, LocalDate toDate, String sortedBy,
@@ -101,15 +112,25 @@ public class AdvertiseServiceImpl implements AdvertiseService {
 		}
 		
 		if(dateCondition!=null && dateCondition.contains("equal")) {
+			if(onDate==null)
+				throw new OnDateMissingException();
 			predicateDateConditionEquals=critertiaBuilder.equal(rootEntity.get("createdDate"),onDate);
 		}
 		if(dateCondition!=null && dateCondition.contains("greater")) {
+			if(fromDate==null)
+				throw new FromDateMissingException();
 			predicateDateConditionGreaterThan=critertiaBuilder.greaterThan(rootEntity.get("createdDate"),fromDate);	
 		}
 		if(dateCondition!=null && dateCondition.contains("less")) {
+			if(fromDate==null)
+				throw new FromDateMissingException();
 			predicateDateConditionLessThan=critertiaBuilder.lessThan(rootEntity.get("createdDate"), fromDate);
 		}
 		if(dateCondition!=null && dateCondition.contains("between")) {
+			if(fromDate==null)
+				throw new FromDateMissingException();
+			if(toDate==null)
+				throw new ToDateMissingException();
 			predicateDateConditionBetween=critertiaBuilder.between(rootEntity.get("createdDate"), fromDate, toDate);
 		}
 		predicateDateCondition=critertiaBuilder.and(predicateDateConditionEquals,predicateDateConditionBetween,predicateDateConditionGreaterThan,predicateDateConditionLessThan);
@@ -126,6 +147,8 @@ public class AdvertiseServiceImpl implements AdvertiseService {
 			}
 		}
 		TypedQuery<AdvertiseEntity> typedQuery = entityManager.createQuery(criteriaQuery);
+		if(startIndex<0)
+			throw new InvalidPageIdException();
 		typedQuery.setFirstResult(startIndex);
 		typedQuery.setMaxResults(records);
 		List<AdvertiseEntity> advertiseEntityList=typedQuery.getResultList();
@@ -137,6 +160,7 @@ public class AdvertiseServiceImpl implements AdvertiseService {
 		return advertiseList;
 	}
 
+	//14
 	@Override
 	public List<Advertise> SearchAdvByText(String searchText) {
 		CriteriaBuilder critertiaBuilder=entityManager.getCriteriaBuilder();
@@ -176,7 +200,7 @@ public class AdvertiseServiceImpl implements AdvertiseService {
 	}
 
 
-
+	//9
 	@Override
 	public Advertise updateAdvertise(int id,Advertise adv, String authToken) {
 		if(loginServiceDelegate.isTokenValid(authToken)) {
@@ -186,6 +210,10 @@ public class AdvertiseServiceImpl implements AdvertiseService {
 				advertiseEntity.setTitle(adv.getTitle());
 				advertiseEntity.setDescription(adv.getDescription());
 				advertiseEntity.setPrice(adv.getPrice());
+				if(adv.getCategoryId()<1)
+					throw new InvalidCategoryIdException();
+				if(adv.getStatusId()<1)
+					throw new InvalidStatusIdException();
 				advertiseEntity.setCategory(masterDataServiceDelegate.getCategoryValue(adv.getCategoryId()));
 				advertiseEntity.setStatus(masterDataServiceDelegate.getStatusValue(adv.getStatusId()));
 				advertiseEntity.setModifiedDate(LocalDate.now());
@@ -200,12 +228,15 @@ public class AdvertiseServiceImpl implements AdvertiseService {
 		}
 	}
 
-
+	//10
 	@Override
 	public List<Advertise> getAllAdvByUser(String authToken) {
 		if(loginServiceDelegate.isTokenValid(authToken)) {
 			authToken=authToken.substring(7);
 			List<AdvertiseEntity> advertiseEntities=advertiseRepo.findByUsername(jwtUtil.extractUsername(authToken));
+			if (advertiseEntities.isEmpty()) {
+				throw new UserNameDoesNotExistException();
+			}
 			List<Advertise> advertises=new ArrayList<>();
 			for(AdvertiseEntity advertiseEntity:advertiseEntities)
 				advertises.add(convertEntityIntoDTO(advertiseEntity));
@@ -217,7 +248,7 @@ public class AdvertiseServiceImpl implements AdvertiseService {
 	}
 
 
-
+	//11
 	@Override
 	public Advertise getAdvById(int id,String authToken) {
 		if(loginServiceDelegate.isTokenValid(authToken)) {
@@ -238,7 +269,7 @@ public class AdvertiseServiceImpl implements AdvertiseService {
 		}
 	}
 
-
+	//12
 	@Override
 	public boolean deleteAdvById(int id,String authToken) {
 		if(loginServiceDelegate.isTokenValid(authToken)) {
@@ -254,7 +285,7 @@ public class AdvertiseServiceImpl implements AdvertiseService {
 		}
 	}
 
-
+	//15
 	@Override
 	public Advertise returnAdv(int id, String authToken) {
 		if(loginServiceDelegate.isTokenValid(authToken)) {
