@@ -22,22 +22,22 @@ public class MasterDataController {
 	@Autowired
 	MasterDataService masterDataService;
 	
-	@GetMapping(value="/advertise/category",produces=MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value="/advertise/category",produces={ MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 	public List<Category> getAllCategories(){
 		return masterDataService.getAllCategories();
 	}
 	
-	@GetMapping(value="/advertise/status",produces=MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value="/advertise/status",produces={ MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 	public List<Status> getAllStatus(){
 		return masterDataService.getAllStatus();
 	}
 	
-	@GetMapping(value="/advertise/category/{id}",produces=MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value="/advertise/category/{id}",produces={ MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 	public String getCategoryById(@PathVariable("id")int id){
 		return masterDataService.getCategoryById(id);
 	}
 	
-	@GetMapping(value="/advertise/status/{id}",produces=MediaType.APPLICATION_JSON_VALUE)
+	@GetMapping(value="/advertise/status/{id}",produces={ MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
 	public String getStatusById(@PathVariable("id")int id){
 		return masterDataService.getStatusById(id);
 	}
