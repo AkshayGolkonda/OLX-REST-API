@@ -79,6 +79,7 @@ public class LoginServiceImpl implements LoginService {
 	@Override
 	public User getUser(String authToken) {
 		try {
+			authToken=authToken.substring(7);
 			String username=jwtUtil.extractUsername(authToken);
 			List<UserEntity> userEntityList = userRepo.findByUserName(username);
 			if(userEntityList==null || userEntityList.size()==0) {

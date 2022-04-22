@@ -62,6 +62,15 @@ public class User {
 	}
 	
 	
+	@Override
+	public boolean equals(Object obj) {
+	User advertiseDto = (User)obj;
+	if(this.userName.equals(advertiseDto.getUserName()))
+	return true;
+	return false;
+	}
+	
+	
 	
 	
 }
