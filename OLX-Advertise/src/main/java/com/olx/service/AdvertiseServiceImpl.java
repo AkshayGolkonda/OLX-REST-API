@@ -55,7 +55,7 @@ public class AdvertiseServiceImpl implements AdvertiseService {
 	//8
 	@Override
 	public Advertise createNewAdvertise(Advertise adv, String authToken) {
-		if(loginServiceDelegate.isTokenValid(authToken)) {
+		if(loginServiceDelegate.isTokenValid(authToken)){
 			AdvertiseEntity advertiseEntity=convertDTOIntoEntity(adv);
 			if(adv.getCategoryId()<1)
 				throw new InvalidCategoryIdException();
@@ -70,10 +70,10 @@ public class AdvertiseServiceImpl implements AdvertiseService {
 			advertiseRepo.save(advertiseEntity);
 			return convertEntityIntoDTO(advertiseEntity);
 		}
-		else {
+		else{
 			throw new InvalidAuthTokenException();
 		}
-	} 	
+	}
 
 	//13
 	@Override

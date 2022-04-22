@@ -9,20 +9,31 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
+
 @Service
 public class LoginServiceDelegateImpl implements LoginServiceDelegate{
 
 	@Autowired
 	RestTemplate restTemplate;
 	
+	@CircuitBreaker(name="AUTH_TOKEN_VALIDATION",fallbackMethod ="fallbackisTokenValid")
 	@Override
 	public boolean isTokenValid(String authToken) {
 		HttpHeaders headers=new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.set("Authorization", authToken);
 		HttpEntity entity=new HttpEntity(headers);
-		ResponseEntity<Boolean> response=this.restTemplate.exchange("http://localhost:9000/olx-login/token/validate", HttpMethod.GET, entity, Boolean.class);
+		ResponseEntity<Boolean> response=
+				this.restTemplate.exchange("http://API-GATEWAY/olx-login/token/validate", HttpMethod.GET, entity, Boolean.class);
+				//this.restTemplate.exchange("http://AUTH-SERVICE/olx-login/token/validate", HttpMethod.GET, entity, Boolean.class);
+				//this.restTemplate.exchange("http://localhost:9000/olx-login/token/validate", HttpMethod.GET, entity, Boolean.class);
 		return response.getBody();
+	}
+	
+	public boolean fallbackisTokenValid(String authToken,Exception exception) {
+		System.out.println("OLX-Login failed - Inside fallbackisTokenValid: "+exception);
+		return false;
 	}
 
 }

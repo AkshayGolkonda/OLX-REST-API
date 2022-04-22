@@ -107,6 +107,14 @@ public class Advertise {
 				+ "]";
 	}
 	
+	@Override
+	public boolean equals(Object obj) {
+	Advertise advertiseDto = (Advertise)obj;
+	if(this.title.equals(advertiseDto.getTitle()))
+	return true;
+	return false;
+	}
+	
 	
 	
 }

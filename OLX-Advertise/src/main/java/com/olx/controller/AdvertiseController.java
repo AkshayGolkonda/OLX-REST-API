@@ -35,7 +35,7 @@ public class AdvertiseController {
 	@Autowired
 	AdvertiseService advertiseService;
 	//8
-	@PostMapping(value="/advertise", consumes=MediaType.APPLICATION_JSON_VALUE, produces=MediaType.APPLICATION_JSON_VALUE)
+	@PostMapping(value="/advertise", consumes={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE}, produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
 	public ResponseEntity<Advertise> createNewAdvertise(@RequestBody Advertise advertise, @RequestHeader("Authorization") String authToken) {
 	Advertise adv = this.advertiseService.createNewAdvertise(advertise, authToken);
 	return new ResponseEntity<Advertise>(adv, HttpStatus.OK);
@@ -73,7 +73,7 @@ public class AdvertiseController {
     
  
     // 13	
-    @GetMapping(value="/advertise/search/filtercriteria", produces=MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value="/advertise/search/filtercriteria", produces={MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     public ResponseEntity<List<Advertise>> searchAdvertisesByFilterCriteria(@RequestParam(name="searchText", required = false)String searchText,
     @RequestParam(name ="category", required = false)String category, 
     @RequestParam(name="postedBy", required=false)String postedBy,
@@ -92,7 +92,7 @@ public class AdvertiseController {
     // 'searchText' within all fields of an advertise.
     @GetMapping(value = "/advertise/search", produces = { MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE })
     //@ApiOperation(value = "Reads specific stock", notes = "This REST API returns list the stock of given id")
-    public ResponseEntity<List<Advertise>> SearchAdvByText(@RequestParam("searchText") String searchText) {
+    public ResponseEntity<List<Advertise>> searchAdvByText(@RequestParam("searchText") String searchText) {
     	return new ResponseEntity<List<Advertise>>(advertiseService.SearchAdvByText(searchText),HttpStatus.OK);
     }
     
